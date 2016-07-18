@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="primary_color_purple">#72166b</color>
+
+    <color name="supporting_color_dark_purple">#3c0555</color>
+    <color name="supporting_color_light_purple">#aa73a6</color>
+
+    <color name="secondary_color_dark_grey">#292c38</color>
+    <color name="supporting_color_grey">#666666</color>
+    <color name="supporting_color_light_grey">#c6c6c6</color>
+
+    <color name="black">#000000</color>
+
+    <color name="text_primary">#d9000000</color>
+    <color name="text_secondary">#8c000000</color>
+    <color name="divider">#1a000000</color>
+    <color name="light_background">#FFFAFAFA</color>
+
+    <color name="error">#D50000</color>
+</resources>
