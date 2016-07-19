@@ -28,4 +28,8 @@
 
     <!-- Relay fragment -->
     <string name="relay_toggle_title">Relay Toggle</string>
+    <string name="login_with_creator_account">LOGIN WITH CREATOR ACCOUNT</string>
+
+    <string name="visit_us"><a href='http://beta.creator.io'>visit us on to learn more</a></string>
+
 </resources>

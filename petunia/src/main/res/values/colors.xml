@@ -7,8 +7,8 @@
     <color name="supporting_color_light_purple">#aa73a6</color>
 
     <color name="secondary_color_dark_grey">#292c38</color>
-    <color name="supporting_color_grey">#666666</color>
-    <color name="supporting_color_light_grey">#c6c6c6</color>
+    <color name="secondary_color_grey">#666666</color>
+    <color name="secondary_color_light_grey">#c6c6c6</color>
 
     <color name="black">#000000</color>
 

@@ -1,6 +1,8 @@
 package com.imgtec.creator.petunia.presentation.fragments;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +43,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class LoginFragment extends BaseFragment {
 
@@ -124,6 +127,13 @@ public class LoginFragment extends BaseFragment {
     else {
       deviceService.login(ak.getKey(), ak.getSecret(), new DeviceServerLoginCallback(this, prefs));
     }
+  }
+
+  @OnClick(R.id.link_tv)
+  void openLink() {
+    Uri uri = Uri.parse("http://beta.creator.io");
+    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+    startActivity(intent);
   }
 
   private void verifyWithCredentials(String username, String password) {

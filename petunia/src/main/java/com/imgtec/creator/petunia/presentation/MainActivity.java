@@ -12,7 +12,6 @@ import com.imgtec.creator.petunia.R;
 import com.imgtec.creator.petunia.data.Preferences;
 import com.imgtec.creator.petunia.presentation.fragments.FragmentHelper;
 import com.imgtec.creator.petunia.presentation.fragments.LoginFragment;
-import com.imgtec.creator.petunia.presentation.fragments.SplashFragment;
 import com.imgtec.creator.petunia.presentation.utils.ToolbarHelper;
 import com.imgtec.di.HasComponent;
 
@@ -54,7 +53,7 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
     toolbarHelper.setToolbar(toolbar);
 
     if (savedInstanceState == null) {
-      showFragmentWithClearBackstack(SplashFragment.newInstance());
+      showFragmentWithClearBackstack(LoginFragment.newInstance());
     }
   }
 

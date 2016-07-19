@@ -34,7 +34,7 @@
 
     <RelativeLayout
         android:id="@+id/fragment_container"
-        android:background="@color/supporting_color_light_grey"
+        android:background="@color/secondary_color_light_grey"
         android:layout_below="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

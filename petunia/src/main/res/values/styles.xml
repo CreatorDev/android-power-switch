@@ -2,7 +2,6 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_color_purple</item>
-        <item name="colorPrimaryDark">@color/supporting_color_dark_purple</item>
         <item name="colorAccent">@color/supporting_color_light_purple</item>
 
         <item name="android:editTextStyle">@style/CustomEditText</item>
@@ -17,7 +16,6 @@
         <item name="android:actionModeCloseDrawable">@drawable/ic_clear_white_24dp</item>
         <item name="actionModeCloseDrawable">@drawable/ic_clear_white_24dp</item>
         <item name="actionModeStyle">@style/ActionModeStyle</item>
-        <!--<item name="colorControlNormal">?android:attr/textColorPrimaryInverse</item>-->
     </style>s
 
     <style name="AppTheme.NoActionBar">
