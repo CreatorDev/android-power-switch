@@ -19,8 +19,6 @@ package com.imgtec.creator.petunia.data;
 import com.google.gson.Gson;
 import com.imgtec.creator.petunia.data.api.pojo.Client;
 
-import java.io.Serializable;
-
 public class Gateway {
 
   private final Client client;

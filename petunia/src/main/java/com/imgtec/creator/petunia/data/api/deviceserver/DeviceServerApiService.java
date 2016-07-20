@@ -25,7 +25,6 @@ import com.imgtec.creator.petunia.data.api.pojo.ObjectTypes;
 import com.imgtec.creator.petunia.data.api.pojo.RelayState;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  *

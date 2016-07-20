@@ -3,7 +3,6 @@ package com.imgtec.creator.petunia.app;
 import android.content.Context;
 import android.os.Handler;
 
-import com.imgtec.di.PerActivity;
 import com.imgtec.di.PerApp;
 
 import java.util.concurrent.ExecutorService;

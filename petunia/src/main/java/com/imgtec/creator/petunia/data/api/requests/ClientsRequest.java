@@ -16,9 +16,7 @@
 package com.imgtec.creator.petunia.data.api.requests;
 
 import com.imgtec.creator.petunia.data.api.pojo.Clients;
-import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
 
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 

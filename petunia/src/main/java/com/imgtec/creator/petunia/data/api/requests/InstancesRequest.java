@@ -19,7 +19,6 @@ import com.google.gson.reflect.TypeToken;
 import com.imgtec.creator.petunia.data.api.ResponseHandler;
 import com.imgtec.creator.petunia.data.api.pojo.Hateoas;
 import com.imgtec.creator.petunia.data.api.pojo.Instances;
-import com.imgtec.creator.petunia.data.api.pojo.RelayState;
 
 import java.io.IOException;
 

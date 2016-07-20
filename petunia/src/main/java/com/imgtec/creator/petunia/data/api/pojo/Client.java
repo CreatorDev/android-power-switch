@@ -18,9 +18,6 @@ package com.imgtec.creator.petunia.data.api.pojo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Client extends Hateoas {
 
   @SerializedName("Name")

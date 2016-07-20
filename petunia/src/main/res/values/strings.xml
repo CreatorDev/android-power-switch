@@ -23,4 +23,8 @@
 
     <string name="visit_us"><a href='http://beta.creator.io'>visit us on to learn more</a></string>
 
+    <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
+    <string name="no_device_found">Could not find any device with matchin criteria.</string>
+
 </resources>

@@ -16,6 +16,8 @@
 package com.imgtec.creator.petunia.presentation.fragments;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,9 +43,6 @@ import com.imgtec.creator.petunia.presentation.views.HorizontalItemDecoration;
 import com.imgtec.creator.petunia.presentation.views.RecyclerItemClickSupport;
 import com.imgtec.di.HasComponent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -59,7 +58,6 @@ public class ChooseDeviceFragment extends BaseFragment {
   @BindView(R.id.gateways)
   RecyclerView recyclerView;
 
-  private final Logger logger = LoggerFactory.getLogger(getClass());
   private LinearLayoutManager layoutManager;
   private GatewaysAdapter adapter;
 
@@ -100,7 +98,6 @@ public class ChooseDeviceFragment extends BaseFragment {
           @Override
           public void onItemClicked(RecyclerView recyclerView, int position, View view) {
             Gateway gateway = adapter.getItem(position);
-            logger.debug("Gateway: {} selected", gateway);
             FragmentHelper.replaceFragment(
                 getActivity().getSupportFragmentManager(),
                 RelayToggleFragment.newInstance(gateway));
@@ -139,7 +136,29 @@ public class ChooseDeviceFragment extends BaseFragment {
 
   @Override
   public void onPause() {
+    toolbarHelper.hideProgress();
     super.onPause();
+  }
+
+  private void showRetryDialog() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    builder
+        .setMessage(R.string.no_device_found)
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+          }
+        })
+    .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        loadGateways();
+        dialog.dismiss();
+      }
+    });
+
+    builder.create().show();
   }
 
   private static class GatewayRequestor implements DataService.DataCallback<List<Gateway>> {
@@ -148,7 +167,7 @@ public class ChooseDeviceFragment extends BaseFragment {
 
     public GatewayRequestor(ChooseDeviceFragment fragment) {
       super();
-      this.fragment = new WeakReference<ChooseDeviceFragment>(fragment);
+      this.fragment = new WeakReference<>(fragment);
     }
 
     @Override
@@ -158,10 +177,14 @@ public class ChooseDeviceFragment extends BaseFragment {
         f.getActivity().runOnUiThread(new Runnable() {
           @Override
           public void run() {
-            f.adapter.addAll(result);
-            f.adapter.notifyDataSetChanged();
 
             f.toolbarHelper.hideProgress();
+            if (result.size() == 0) {
+              f.showRetryDialog();
+              return;
+            }
+            f.adapter.addAll(result);
+            f.adapter.notifyDataSetChanged();
           }
         });
       }

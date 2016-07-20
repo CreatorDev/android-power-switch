@@ -18,7 +18,6 @@ package com.imgtec.creator.petunia.data.api;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.imgtec.creator.petunia.data.api.pojo.Hateoas;
-import com.imgtec.creator.petunia.data.api.pojo.Instances;
 
 import java.io.IOException;
 
