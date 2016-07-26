@@ -21,26 +21,23 @@
               android:background="?attr/selectableItemBackground"
               style="@style/GatewayListItem">
 
-    <FrameLayout
+    <ImageView
         android:id="@+id/icon"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/acuator_2"
+        android:scaleType="fitCenter"
         style="@style/ListItemImage">
+    </ImageView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="G"
-            android:textSize="40dp"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:background="@drawable/gateway_shape"/>
-    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/icon"
         android:orientation="vertical"
+        android:layout_alignTop="@id/icon"
+        android:layout_alignBottom="@id/icon"
+        android:gravity="center_vertical"
         android:padding="4dp">
         <TextView
             android:id="@+id/title"
