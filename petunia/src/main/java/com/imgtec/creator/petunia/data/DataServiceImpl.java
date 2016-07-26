@@ -82,6 +82,7 @@ public class DataServiceImpl implements DataService {
 
         }
         catch (final Exception e) {
+          logger.warn("Requesting gateways failed!", e);
           postFailure(callback, e);
         }
       }
@@ -122,7 +123,7 @@ public class DataServiceImpl implements DataService {
           });
         }
         catch (final Exception e) {
-
+          logger.warn("Requesting relays failed!", e);
           mainHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -147,8 +148,6 @@ public class DataServiceImpl implements DataService {
           deviceServerApi.putInstanceForObject(device.getObjectType(),
               device.getInstanceId(), isOn);
 
-
-
           mainHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -157,6 +156,7 @@ public class DataServiceImpl implements DataService {
           });
         }
         catch (final Exception e) {
+          logger.warn("Changing relay state failed!", e);
           mainHandler.post(new Runnable() {
           @Override
           public void run() {

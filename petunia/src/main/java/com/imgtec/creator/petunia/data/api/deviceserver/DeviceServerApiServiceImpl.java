@@ -135,24 +135,12 @@ public class DeviceServerApiServiceImpl implements DeviceServerApiService {
       @Override
       public void run() {
         try {
-          ObjectTypes objectTypes = new GetRequest<ObjectTypes>(client.getLinkByRel("objecttypes").getHref())
-              .execute(DeviceServerApiServiceImpl.this.client, ObjectTypes.class);
-
-          if (filter != null) {
-            List<ObjectType> list = new ArrayList<>();
-            for (ObjectType obj: objectTypes.getItems()) {
-              if (filter.accept(obj)) {
-                list.add(obj);
-              }
-            }
-            objectTypes.setItems(list);
-          }
+          ObjectTypes objectTypes = getObjectTypes(client, filter);
 
           callback.onSuccess(DeviceServerApiServiceImpl.this, objectTypes);
         } catch (Exception e) {
           callback.onFailure(DeviceServerApiServiceImpl.this, e);
         }
-
       }
     });
   }

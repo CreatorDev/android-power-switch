@@ -18,8 +18,8 @@ package com.imgtec.creator.petunia.app;
 import android.content.SharedPreferences;
 import android.os.Handler;
 
+import com.imgtec.creator.petunia.data.DataModule;
 import com.imgtec.creator.petunia.data.DataService;
-import com.imgtec.creator.petunia.data.FakeDataModule;
 import com.imgtec.creator.petunia.data.api.ApiModule;
 import com.imgtec.creator.petunia.data.api.accountserver.AccountServerApiService;
 import com.imgtec.creator.petunia.data.api.accountserver.AccountServerModule;
@@ -33,15 +33,14 @@ import javax.inject.Named;
 import dagger.Component;
 import okhttp3.OkHttpClient;
 
-
 @PerApp
 @Component(
     modules = {
         ApplicationModule.class,
-        FakeDataModule.class,
+        DataModule.class,
         ApiModule.class,
         AccountServerModule.class,
-        DeviceServerModule.class,
+        DeviceServerModule.class
     }
 )
 public interface ApplicationComponent {
