@@ -16,7 +16,7 @@
         <item name="android:actionModeCloseDrawable">@drawable/ic_clear_white_24dp</item>
         <item name="actionModeCloseDrawable">@drawable/ic_clear_white_24dp</item>
         <item name="actionModeStyle">@style/ActionModeStyle</item>
-    </style>s
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
