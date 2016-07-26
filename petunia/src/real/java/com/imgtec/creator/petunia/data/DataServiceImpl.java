@@ -64,7 +64,7 @@ public class DataServiceImpl implements DataService {
           Clients result = deviceServerApi.getClients(new DeviceServerApiService.Filter<Client>() {
             @Override
             public boolean accept(Client client) {
-              return client.getName().startsWith("RelayDevice"); //FIXME: use proper filtering
+              return client.getName().startsWith("RelayDevice");
             }
           });
 
