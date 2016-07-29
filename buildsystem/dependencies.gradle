@@ -40,7 +40,7 @@ ext {
     petuniaMinSdkVersion = 15
     petuniaTargetSdkVersion = 23
     petuniaVersionCode = 1
-    petuniaVersionName = "0.6.0"
+    petuniaVersionName = "1.0.0"
 
 
     //----------------------------------------------------------------------
