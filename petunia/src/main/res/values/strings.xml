@@ -37,6 +37,9 @@
     <!-- General -->
     <string name="no_internet_connection">You don\'t have internet connection. App works in offline mode.</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <!-- Login Fragment -->
     <string name="username_or_email">Username</string>
     <string name="settings">Settings</string>
@@ -57,5 +60,8 @@
     <string name="cancel">Cancel</string>
     <string name="retry">Retry</string>
     <string name="no_device_found">Could not find any device with matching criteria.</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+
 
 </resources>

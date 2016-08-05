@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ <b>Copyright (c) 2016, Imagination Technologies Limited and/or its affiliated group companies
   ~  and/or licensors. </b>
@@ -29,18 +30,14 @@
   ~
   -->
 
-<resources>
-    <dimen name="nav_header_height">160dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-    <dimen name="rounded_edit_text_size">16sp</dimen>
-    <dimen name="button_height">48dp</dimen>
-
-    <dimen name="edit_text_padding">15dp</dimen>
-    <dimen name="edit_text_margin">10dp</dimen>
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="user_icon_width">64dp</dimen>
-    <dimen name="user_icon_height">64dp</dimen>
-
-</resources>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About layout!"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>

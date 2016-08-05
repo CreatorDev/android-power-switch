@@ -32,9 +32,11 @@
 package com.imgtec.creator.petunia.presentation;
 
 import com.imgtec.creator.petunia.app.ApplicationComponent;
+import com.imgtec.creator.petunia.presentation.fragments.AboutFragment;
 import com.imgtec.creator.petunia.presentation.fragments.ChooseDeviceFragment;
 import com.imgtec.creator.petunia.presentation.fragments.LoginFragment;
 import com.imgtec.creator.petunia.presentation.fragments.RelayToggleFragment;
+import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
 import com.imgtec.creator.petunia.presentation.utils.ToolbarHelper;
 import com.imgtec.di.HasComponent;
 import com.imgtec.di.PerActivity;
@@ -67,6 +69,8 @@ public interface ActivityComponent {
   void inject(LoginFragment fragment);
   void inject(ChooseDeviceFragment fragment);
   void inject(RelayToggleFragment fragment);
+  void inject(AboutFragment fragment);
 
+  DrawerHelper getDrawerHelper();
   ToolbarHelper getToolbarHelper();
 }

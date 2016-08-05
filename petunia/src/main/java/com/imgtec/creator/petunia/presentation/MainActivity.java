@@ -35,14 +35,23 @@ package com.imgtec.creator.petunia.presentation;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.imgtec.creator.petunia.R;
 import com.imgtec.creator.petunia.data.Preferences;
+import com.imgtec.creator.petunia.presentation.fragments.AboutFragment;
+import com.imgtec.creator.petunia.presentation.fragments.ChooseDeviceFragment;
 import com.imgtec.creator.petunia.presentation.fragments.FragmentHelper;
 import com.imgtec.creator.petunia.presentation.fragments.LoginFragment;
+import com.imgtec.creator.petunia.presentation.fragments.RelayToggleFragment;
+import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
 import com.imgtec.creator.petunia.presentation.utils.ToolbarHelper;
 import com.imgtec.di.HasComponent;
 
@@ -54,23 +63,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.R.id.toggle;
+
 /**
  *
  */
-public class MainActivity extends BaseActivity implements HasComponent<ActivityComponent> {
+public class MainActivity extends BaseActivity implements HasComponent<ActivityComponent>,
+    NavigationView.OnNavigationItemSelectedListener {
 
   private ActivityComponent component;
 
   @BindView(R.id.app_bar) AppBarLayout appBar;
   @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.drawer_layout) DrawerLayout drawer;
+  @BindView(R.id.nav_view) NavigationView navigationView;
 
   Fragment currentFragment;
 
   @Inject Logger logger;
 
+  @Inject DrawerHelper drawerHelper;
   @Inject ToolbarHelper toolbarHelper;
   @Inject Preferences preferences;
 
+  ActionBarDrawerToggle toggle;
   Unbinder unbinder;
 
   @Override
@@ -82,10 +98,25 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
 
     setSupportActionBar(toolbar);
     toolbarHelper.setToolbar(toolbar);
+    setupNavigationDrawer();
 
     if (savedInstanceState == null) {
       showFragmentWithClearBackstack(LoginFragment.newInstance());
     }
+  }
+
+  private void setupNavigationDrawer() {
+    toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+        R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+    };
+    drawer.addDrawerListener(toggle);
+    toggle.syncState();
+
+
+    navigationView.setNavigationItemSelectedListener(this);
+    navigationView.getMenu().getItem(0).setChecked(true);
+    drawerHelper.setDrawer(drawer);
+    drawerHelper.setDrawerToggle(toggle);
   }
 
   @Override
@@ -107,6 +138,7 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
 
   @Override
   protected void onDestroy() {
+    drawer.removeDrawerListener(toggle);
     unbinder.unbind();
     toolbarHelper = null;
     super.onDestroy();
@@ -131,12 +163,38 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
   }
 
   @Override
+  public boolean onNavigationItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    item.setChecked(true);
+
+    switch (id) {
+      case R.id.choose_device: {
+        showFragmentWithClearBackstack(ChooseDeviceFragment.newInstance());
+        break;
+      }
+      case R.id.about: {
+        showFragmentWithClearBackstack(AboutFragment.newInstance());
+        break;
+      }
+      case R.id.logout: {
+
+      }
+      default:
+        break;
+    }
+    drawer.closeDrawer(GravityCompat.START);
+    return false;
+  }
+
+  @Override
   protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
+    toggle.syncState();
   }
 
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
+    toggle.onConfigurationChanged(newConfig);
   }
 }

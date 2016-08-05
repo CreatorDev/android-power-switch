@@ -29,47 +29,62 @@
  *
  */
 
-package com.imgtec.creator.petunia.presentation.fragments;
+package com.imgtec.creator.petunia.presentation.utils;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 
-import com.imgtec.creator.petunia.R;
-import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
+import com.imgtec.creator.petunia.presentation.MainActivity;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+/**
+ *
+ */
+public class DrawerHelper {
+  private final MainActivity activity;
+  private DrawerLayout drawer;
+  private ActionBarDrawerToggle drawerToggle;
 
-public abstract class BaseFragment extends Fragment {
-
-  protected Unbinder unbinder;
-  @Inject DrawerHelper drawerHelper;
-
-  @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    unbinder = ButterKnife.bind(this, view);
+  @Inject
+  public DrawerHelper(MainActivity activity) {
+    this.activity = activity;
   }
 
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
+  public DrawerLayout getDrawer() {
+    if (drawer == null) {
+      throw new IllegalArgumentException("Set Drawer first.");
+    }
+    return drawer;
   }
 
-  @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    setComponent();
-    drawerHelper.unlockDrawer();
+  public void setDrawer(DrawerLayout drawer) {
+    this.drawer = drawer;
   }
 
-  protected abstract void setComponent();
+  public ActionBarDrawerToggle getDrawerToggle() {
+    return this.drawerToggle;
+  }
 
+  public void setDrawerToggle(ActionBarDrawerToggle drawerToggle) {
+    this.drawerToggle = drawerToggle;
+  }
+
+  public void unlockDrawer() {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+      }
+    });
+  }
+
+  public void lockDrawer() {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+      }
+    });
+  }
 }

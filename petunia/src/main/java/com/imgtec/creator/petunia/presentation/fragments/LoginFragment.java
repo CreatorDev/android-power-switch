@@ -62,6 +62,7 @@ import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
 import com.imgtec.creator.petunia.data.api.pojo.AccessKeys;
 import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
 import com.imgtec.creator.petunia.presentation.ActivityComponent;
+import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
 import com.imgtec.creator.petunia.presentation.views.ProgressButton;
 import com.imgtec.di.HasComponent;
 
@@ -121,6 +122,7 @@ public class LoginFragment extends BaseFragment {
     setupToolbar();
     setupCredentials();
 
+    drawerHelper.lockDrawer();
     loginBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
