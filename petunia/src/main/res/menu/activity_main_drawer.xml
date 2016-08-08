@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ <b>Copyright (c) 2016, Imagination Technologies Limited and/or its affiliated group companies
   ~  and/or licensors. </b>
@@ -29,18 +30,20 @@
   ~
   -->
 
-<resources>
-    <dimen name="nav_header_height">160dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/choose_device"
+            android:icon="@drawable/actuator_2"
+            android:title="@string/choose_client"/>
+        <item
+            android:id="@+id/about"
+            android:icon="@drawable/ic_info_outline_black_24dp"
+            android:title="@string/about"/>
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/logout"/>
 
-    <dimen name="rounded_edit_text_size">16sp</dimen>
-    <dimen name="button_height">48dp</dimen>
-
-    <dimen name="edit_text_padding">15dp</dimen>
-    <dimen name="edit_text_margin">10dp</dimen>
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="user_icon_width">64dp</dimen>
-    <dimen name="user_icon_height">64dp</dimen>
-
-</resources>
+    </group>
+</menu>

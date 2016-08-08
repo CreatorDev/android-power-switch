@@ -34,6 +34,7 @@ package com.imgtec.creator.petunia.presentation.fragments;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,6 +53,7 @@ import com.imgtec.creator.petunia.data.Gateway;
 import com.imgtec.creator.petunia.data.RelayDevice;
 import com.imgtec.creator.petunia.presentation.ActivityComponent;
 import com.imgtec.creator.petunia.presentation.adapters.RelaysAdapter;
+import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
 import com.imgtec.creator.petunia.presentation.views.HorizontalItemDecoration;
 import com.imgtec.di.HasComponent;
 
@@ -74,6 +76,7 @@ public class RelayToggleFragment extends BaseFragment implements ItemSwitchListe
   private static final String GATEWAY = "GATEWAY";
   @Inject Logger logger;
   @Inject DataService dataService;
+  @Inject DrawerHelper drawerHelper;
 
   @BindView(R.id.relays_recycler_view)
   RecyclerView recyclerView;
@@ -120,6 +123,8 @@ public class RelayToggleFragment extends BaseFragment implements ItemSwitchListe
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     recyclerView.addItemDecoration(new HorizontalItemDecoration(getContext()));
+
+    drawerHelper.hideSelector();
 
     loadRelays();
   }

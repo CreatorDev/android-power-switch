@@ -31,45 +31,69 @@
 
 package com.imgtec.creator.petunia.presentation.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.transition.Slide;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.imgtec.creator.petunia.BuildConfig;
 import com.imgtec.creator.petunia.R;
-import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
+import com.imgtec.creator.petunia.presentation.ActivityComponent;
+import com.imgtec.di.HasComponent;
 
-import javax.inject.Inject;
+import butterknife.BindView;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+/**
+ *
+ */
+public class AboutFragment extends BaseFragment {
 
-public abstract class BaseFragment extends Fragment {
+  @BindView(R.id.app_name) TextView name;
+  @BindView(R.id.app_version) TextView version;
 
-  protected Unbinder unbinder;
-  @Inject DrawerHelper drawerHelper;
-
+  public static AboutFragment newInstance() {
+    AboutFragment fragment = new AboutFragment();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      fragment.setExitTransition(new Slide(Gravity.LEFT));
+    }
+    return fragment;
+  }
   @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    unbinder = ButterKnife.bind(this, view);
+  protected void setComponent() {
+    ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
   }
 
+  @Nullable
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_about, container, false);
   }
 
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    setComponent();
-    drawerHelper.unlockDrawer();
+    setupToolbar();
+
+    int versionCode = BuildConfig.VERSION_CODE;
+    String versionName = BuildConfig.VERSION_NAME;
+    version.setText(String.format("Version: %s (%d)",versionName, versionCode));
   }
 
-  protected abstract void setComponent();
+  private void setupToolbar() {
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (actionBar == null) {
+      return;
+    }
+    actionBar.show();
+    actionBar.setTitle(R.string.about);
+  }
 
 }

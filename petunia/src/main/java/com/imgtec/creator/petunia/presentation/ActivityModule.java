@@ -31,6 +31,7 @@
 
 package com.imgtec.creator.petunia.presentation;
 
+import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
 import com.imgtec.creator.petunia.presentation.utils.ToolbarHelper;
 import com.imgtec.di.PerActivity;
 
@@ -60,6 +61,11 @@ final class ActivityModule {
   @Provides
   MainActivity provideActivity() {
     return activity;
+  }
+
+  @Provides @PerActivity
+  DrawerHelper provideDrawerHelper(MainActivity activity) {
+    return new DrawerHelper(activity);
   }
 
   @Provides @PerActivity

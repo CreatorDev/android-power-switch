@@ -41,7 +41,7 @@
         android:id="@+id/icon"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/acuator_2"
+        android:src="@drawable/actuator_1"
         android:scaleType="fitCenter"
         style="@style/ListItemImage">
     </ImageView>
