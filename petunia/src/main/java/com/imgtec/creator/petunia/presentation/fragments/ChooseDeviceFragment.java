@@ -114,7 +114,7 @@ public class ChooseDeviceFragment extends BaseFragment {
           @Override
           public void onItemClicked(RecyclerView recyclerView, int position, View view) {
             Gateway gateway = adapter.getItem(position);
-            FragmentHelper.replaceFragment(
+            FragmentHelper.replaceFragmentAndClearBackStack(
                 getActivity().getSupportFragmentManager(),
                 RelayToggleFragment.newInstance(gateway));
           }

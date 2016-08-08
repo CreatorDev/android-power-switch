@@ -31,8 +31,10 @@
 
 package com.imgtec.creator.petunia.presentation.utils;
 
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Menu;
 import android.widget.TextView;
 
 import com.imgtec.creator.petunia.R;
@@ -99,6 +101,18 @@ public class DrawerHelper {
         }
         if (email != null) {
           ((TextView) activity.findViewById(R.id.email)).setText(email);
+        }
+      }
+    });
+  }
+
+  public void hideSelector() {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        Menu menu = ((NavigationView)drawer.findViewById(R.id.nav_view)).getMenu();
+        if (menu != null) {
+          for (int i = 0; i < menu.size(); menu.getItem(i).setChecked(false), i++);
         }
       }
     });

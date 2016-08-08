@@ -42,15 +42,22 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.imgtec.creator.petunia.BuildConfig;
 import com.imgtec.creator.petunia.R;
 import com.imgtec.creator.petunia.presentation.ActivityComponent;
 import com.imgtec.di.HasComponent;
+
+import butterknife.BindView;
 
 /**
  *
  */
 public class AboutFragment extends BaseFragment {
+
+  @BindView(R.id.app_name) TextView name;
+  @BindView(R.id.app_version) TextView version;
 
   public static AboutFragment newInstance() {
     AboutFragment fragment = new AboutFragment();
@@ -74,6 +81,10 @@ public class AboutFragment extends BaseFragment {
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     setupToolbar();
+
+    int versionCode = BuildConfig.VERSION_CODE;
+    String versionName = BuildConfig.VERSION_NAME;
+    version.setText(String.format("Version: %s (%d)",versionName, versionCode));
   }
 
   private void setupToolbar() {
