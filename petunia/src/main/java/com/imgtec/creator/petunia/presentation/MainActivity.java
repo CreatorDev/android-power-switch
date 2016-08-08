@@ -112,7 +112,6 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
     drawer.addDrawerListener(toggle);
     toggle.syncState();
 
-
     navigationView.setNavigationItemSelectedListener(this);
     navigationView.getMenu().getItem(0).setChecked(true);
     drawerHelper.setDrawer(drawer);

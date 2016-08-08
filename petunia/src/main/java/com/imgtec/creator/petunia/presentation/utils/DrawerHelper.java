@@ -33,7 +33,9 @@ package com.imgtec.creator.petunia.presentation.utils;
 
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.widget.TextView;
 
+import com.imgtec.creator.petunia.R;
 import com.imgtec.creator.petunia.presentation.MainActivity;
 
 import javax.inject.Inject;
@@ -84,6 +86,20 @@ public class DrawerHelper {
       @Override
       public void run() {
         getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+      }
+    });
+  }
+
+  public void updateHeader(final String user, final String email) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (user != null) {
+          ((TextView) activity.findViewById(R.id.user)).setText(user);
+        }
+        if (email != null) {
+          ((TextView) activity.findViewById(R.id.email)).setText(email);
+        }
       }
     });
   }

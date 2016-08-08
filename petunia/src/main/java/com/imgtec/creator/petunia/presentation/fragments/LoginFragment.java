@@ -151,6 +151,8 @@ public class LoginFragment extends BaseFragment {
     verifyWithCredentials(username, password);
 
     loginBtn.setProgress(true);
+    final Credentials c = prefs.getCredentials();
+    drawerHelper.updateHeader(c.getUsername(), c.getEmail());
 
     AccessKey ak = prefs.getAccessKey();
     if (ak.getKey().isEmpty()) {
@@ -201,6 +203,8 @@ public class LoginFragment extends BaseFragment {
   }
 
   private void notifyAccountLoginSuccessful(String key, String secret) {
+    final Credentials c = prefs.getCredentials();
+    drawerHelper.updateHeader(c.getUsername(), c.getEmail());
 
     deviceService.login(key, secret, new DeviceServerLoginCallback(this, prefs));
   }
