@@ -166,7 +166,7 @@ public class LoginFragment extends BaseFragment {
 
   @OnClick(R.id.link_tv)
   void openLink() {
-    Uri uri = Uri.parse("http://beta.creator.io");
+    Uri uri = Uri.parse("http://console.creatordev.io");
     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
     startActivity(intent);
   }

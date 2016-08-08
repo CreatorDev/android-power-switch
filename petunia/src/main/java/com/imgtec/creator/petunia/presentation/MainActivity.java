@@ -176,7 +176,9 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
         break;
       }
       case R.id.logout: {
-
+        preferences.resetAccessKey();
+        preferences.resetCredentials();
+        showFragmentWithClearBackstack(LoginFragment.newInstance());
       }
       default:
         break;
