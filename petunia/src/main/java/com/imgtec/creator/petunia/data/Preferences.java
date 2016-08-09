@@ -33,8 +33,6 @@ package com.imgtec.creator.petunia.data;
 
 import android.content.SharedPreferences;
 
-import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
-
 import javax.inject.Inject;
 
 /**
@@ -51,13 +49,9 @@ public class Preferences {
   private static final String EMAIL = "email";
   private static final String DEFAULT_EMAIL = EMPTY;
 
-  //Access key
-  private static final String AK_NAME = "ak_name";
-  private static final String AK_DEFAULT_NAME = EMPTY;
-  private static final String AK_KEY = "ak_key";
-  private static final String AK_DEFAULT_KEY = EMPTY;
-  private static final String AK_SECRET = "ak_secret";
-  private static final String AK_DEFAULT_SECRET = EMPTY;
+  //OAuth
+  private static final String OAUTH_REFRESH_TOKEN = "oauth_refresh_token";
+  private static final String OAUTH_DEFAULT_REFRESH_TOKEN = EMPTY;
 
   private final SharedPreferences sharedPreferences;
 
@@ -89,27 +83,17 @@ public class Preferences {
     editor.commit();
   }
 
-  public void setAccessKey(AccessKey ak) {
-    setAccessKey(ak.getName(), ak.getKey(), ak.getSecret());
-  }
-
-  public AccessKey getAccessKey() {
-    AccessKey ak = new AccessKey();
-    ak.setName(sharedPreferences.getString(AK_NAME, AK_DEFAULT_NAME));
-    ak.setKey(sharedPreferences.getString(AK_KEY, AK_DEFAULT_KEY));
-    ak.setSecret(sharedPreferences.getString(AK_SECRET, AK_DEFAULT_SECRET));
-    return ak;
-  }
-
-  public void resetAccessKey() {
-    setAccessKey("", "", "");
-  }
-
-  private void setAccessKey(String name, String key, String secret) {
+  public void setRefreshToken(String refreshToken) {
     final SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.putString(AK_NAME, name);
-    editor.putString(AK_KEY, key);
-    editor.putString(AK_SECRET, secret);
+    editor.putString(OAUTH_REFRESH_TOKEN, refreshToken);
     editor.commit();
+  }
+
+  public String getRefreshToken() {
+    return sharedPreferences.getString(OAUTH_REFRESH_TOKEN, OAUTH_DEFAULT_REFRESH_TOKEN);
+  }
+
+  public void resetRefreshToken() {
+    setRefreshToken("");
   }
 }

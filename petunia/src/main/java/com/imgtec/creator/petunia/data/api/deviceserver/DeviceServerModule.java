@@ -71,9 +71,8 @@ public class DeviceServerModule {
 
   @Provides @PerApp @Named("DeviceServer")
   OauthManager provideOauthManager(@Named("DeviceServer") HttpUrl url,
-                                   @Named("DeviceServer")  OauthTokenWrapper token,
-                                   Preferences prefs) {
-    return new OauthManager(url, token, prefs);
+                                   @Named("DeviceServer")  OauthTokenWrapper token) {
+    return new OauthManager(url, token);
   }
 
   @Provides @PerApp @Named("DeviceServer")

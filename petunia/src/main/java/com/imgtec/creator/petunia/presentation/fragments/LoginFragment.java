@@ -154,13 +154,13 @@ public class LoginFragment extends BaseFragment {
     final Credentials c = prefs.getCredentials();
     drawerHelper.updateHeader(c.getUsername(), c.getEmail());
 
-    AccessKey ak = prefs.getAccessKey();
-    if (ak.getKey().isEmpty()) {
+    final String refreshToken = prefs.getRefreshToken();
+    if (refreshToken.isEmpty()) {
       state = LoginState.IN_PROGRESS;
       accountService.login(username, password, new AccountServerLoginCallback(this, prefs, username, password));
     }
     else {
-      deviceService.login(ak.getKey(), ak.getSecret(), new DeviceServerLoginCallback(this, prefs));
+      deviceService.login(refreshToken, new DeviceServerLoginCallback(this, prefs));
     }
   }
 
@@ -177,7 +177,7 @@ public class LoginFragment extends BaseFragment {
 
     //if username & password differ, clear all
     prefs.resetCredentials();
-    prefs.resetAccessKey();
+    prefs.resetRefreshToken();
   }
 
   private void handleState(Bundle savedInstanceState) {
@@ -254,7 +254,6 @@ public class LoginFragment extends BaseFragment {
     public void onSuccess(final AccountServerApiService service, final AccessKeys result) {
 
       AccessKey ak = result.getItems().get(0);
-      preferences.setAccessKey(ak);
       preferences.setCredentials(new Credentials(username, password));
 
       LoginFragment f = fragment.get();
@@ -292,6 +291,9 @@ public class LoginFragment extends BaseFragment {
 
     @Override
     public void onSuccess(DeviceServerApiService service, OauthToken result) {
+
+      preferences.setRefreshToken(result.getRefreshToken());
+
       final LoginFragment f = fragment.get();
       if (f != null && f.getActivity() != null) {
         FragmentHelper.replaceFragmentAndClearBackStack(f.getActivity().getSupportFragmentManager(),
