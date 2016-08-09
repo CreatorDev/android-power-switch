@@ -31,12 +31,11 @@
 
 package com.imgtec.creator.petunia.data.api.oauth;
 
-import com.imgtec.creator.petunia.data.Preferences;
-import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
 import com.imgtec.creator.petunia.data.api.pojo.Api;
 import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
 import com.imgtec.creator.petunia.data.api.requests.GetRequest;
 import com.imgtec.creator.petunia.data.api.requests.OauthRequest;
+import com.imgtec.creator.petunia.data.api.requests.RefreshTokenRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,13 +57,11 @@ public class OauthManager implements Authenticator {
   private final Logger logger = LoggerFactory.getLogger(getClass());
   private final HttpUrl url;
   private final OauthTokenWrapper token;
-  private final Preferences prefs;
 
-  public OauthManager(HttpUrl url, OauthTokenWrapper token, Preferences prefs) {
+  public OauthManager(HttpUrl url, OauthTokenWrapper token) {
     super();
     this.url = url;
     this.token = token;
-    this.prefs = prefs;
   }
 
   @Override
@@ -91,8 +88,8 @@ public class OauthManager implements Authenticator {
   private boolean authorize() {
     try {
       OkHttpClient client = new OkHttpClient.Builder().build();
-      AccessKey ak = prefs.getAccessKey();
-      authorize(client, ak.getKey(), ak.getSecret());
+
+      authorize(client, getOauthToken().getRefreshToken());
       return true;
     }
     catch (final Exception e) {
@@ -117,6 +114,19 @@ public class OauthManager implements Authenticator {
 
     OauthToken oauthToken = new OauthRequest(api.getLinkByRel("authenticate").getHref(),
         key, secret).execute(client, OauthToken.class);
+
+    //this token will be used by oauth interceptor
+    synchronized (token) {
+      token.setAuthToken(oauthToken);
+    }
+  }
+
+  public final void authorize(OkHttpClient client, String refreshToken) throws IOException {
+
+    Api api = new GetRequest<Api>(url.toString()).execute(client, Api.class);
+
+    OauthToken oauthToken = new RefreshTokenRequest(api.getLinkByRel("authenticate").getHref(),
+        refreshToken).execute(client, OauthToken.class);
 
     //this token will be used by oauth interceptor
     synchronized (token) {

@@ -29,38 +29,34 @@
  *
  */
 
-package com.imgtec.creator.petunia.data.api.oauth;
+package com.imgtec.creator.petunia.data.api.requests;
 
 import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
 
-import java.io.IOException;
-
-import okhttp3.Interceptor;
+import okhttp3.FormBody;
 import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  *
  */
-public final class OauthInterceptor implements Interceptor {
+public class RefreshTokenRequest extends BaseRequest<OauthToken> {
 
-  private final OauthTokenWrapper authTokenWrapper;
+  private final String refreshToken;
 
-  public OauthInterceptor(OauthTokenWrapper tokenWrapper) {
-    super();
-    this.authTokenWrapper = tokenWrapper;
+  public RefreshTokenRequest(String url, String refreshToken) {
+    super(url);
+    this.refreshToken = refreshToken;
   }
 
-  @Override public Response intercept(Chain chain) throws IOException {
-
-    OauthToken token = authTokenWrapper.getAuthToken();
-    Request.Builder builder = chain.request().newBuilder();
-    if (token != null) {
-      builder.addHeader("Authorization",
-          String.format("%s %s", token.getTokenType(), token.getAccessToken()));
-
-    }
-    Request request = builder.build();
-    return chain.proceed(request);
+  @Override
+  public Request prepareRequest() {
+    return new Request.Builder()
+        .url(getUrl())
+        .addHeader("Accept", "application/vnd.imgtec.com.oauthtoken+json")
+        .post(new FormBody.Builder()
+            .addEncoded("grant_type", "refresh_token")
+            .addEncoded("refresh_token", refreshToken)
+            .build()) //
+        .build();
   }
 }

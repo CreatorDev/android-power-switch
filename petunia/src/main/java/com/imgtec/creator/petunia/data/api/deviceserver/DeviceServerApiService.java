@@ -50,6 +50,8 @@ public interface DeviceServerApiService {
   void login(final String key, final String secret,
              ApiCallback<DeviceServerApiService, OauthToken> callback);
 
+  void login(final String refreshToken, ApiCallback<DeviceServerApiService, OauthToken> callback);
+
 
   interface Filter<T> {
     boolean accept(T filter);

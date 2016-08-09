@@ -100,6 +100,22 @@ public class DeviceServerApiServiceImpl implements DeviceServerApiService {
   }
 
   @Override
+  public void login(final String refreshToken, final ApiCallback<DeviceServerApiService, OauthToken> callback) {
+    executorService.execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          oauthManager.authorize(client, refreshToken);
+          callback.onSuccess(DeviceServerApiServiceImpl.this, oauthManager.getOauthToken());
+        }
+        catch (Exception e) {
+          callback.onFailure(DeviceServerApiServiceImpl.this, e);
+        }
+      }
+    });
+  }
+
+  @Override
   public final Clients getClients(Filter<Client> filter) throws IOException {
 
     Api api = new GetRequest<Api>(url.toString()).execute(client, Api.class);
