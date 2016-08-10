@@ -32,9 +32,13 @@
 package com.imgtec.creator.petunia.data.api.accountserver;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.imgtec.creator.petunia.data.api.ApiCallback;
+import com.imgtec.creator.petunia.data.api.deviceserver.DeviceServerApiServiceImpl;
+import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
 import com.imgtec.creator.petunia.data.api.pojo.AccessKeys;
 import com.imgtec.creator.petunia.data.api.pojo.Api;
 import com.imgtec.creator.petunia.data.api.pojo.Developer;
@@ -43,6 +47,7 @@ import com.imgtec.creator.petunia.data.api.pojo.UserCreatedResponse;
 import com.imgtec.creator.petunia.data.api.pojo.UserData;
 import com.imgtec.creator.petunia.data.api.requests.GetRequest;
 import com.imgtec.creator.petunia.data.api.requests.OauthRequest;
+import com.imgtec.creator.petunia.data.api.requests.TokenIdRequest;
 import com.imgtec.creator.petunia.data.api.requests.UserCreatedResponseRequest;
 import com.imgtec.creator.petunia.data.api.oauth.OauthTokenWrapper;
 
@@ -59,78 +64,41 @@ public class AccountServerApiServiceImpl implements AccountServerApiService {
   private final Context appContext;
   private final HttpUrl accountServerUrl;
   private final OkHttpClient client;
-  private final OauthTokenWrapper tokenWrapper;
-
   private final ExecutorService executorService;
+  private final IdConfig config;
 
   public AccountServerApiServiceImpl(Context appContext,
                                      HttpUrl accountServer,
                                      OkHttpClient client,
-                                     OauthTokenWrapper tokenWrapper,
-                                     ExecutorService executorService) {
+                                     ExecutorService executorService,
+                                     IdConfig config) {
     super();
     this.appContext = appContext;
     this.accountServerUrl = accountServer;
     this.client = client;
-    this.tokenWrapper = tokenWrapper;
     this.executorService = executorService;
+    this.config = config;
   }
 
   @Override
-  public void createAccount(@NonNull final String username,
-                            @NonNull final String password,
-                            @NonNull final String email,
-                            @NonNull final ApiCallback<AccountServerApiService, UserCreatedResponse> callback) {
+  public void loginOrSignup(Context context) {
+    Intent browserIntent = new Intent(Intent.ACTION_VIEW, config.getOauthUri());
+    browserIntent.setFlags(browserIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+    context.startActivity(browserIntent);
+  }
 
+  @Override
+  public void loginWithIdToken(final String idToken,
+                               final ApiCallback<AccountServerApiService, AccessKey> callback) {
     executorService.execute(new Runnable() {
       @Override
       public void run() {
         try {
-          Api api = new GetRequest<Api>(accountServerUrl.toString()).execute(client, Api.class);
 
-          UserData data = new UserData();
-          data.setUsername(username);
-          data.setPassword(password);
-          data.setEmail(email);
+          AccessKey keys = new TokenIdRequest(accountServerUrl.toString(),
+              idToken).execute(client, AccessKey.class);
 
-          UserCreatedResponse ucr =
-              new UserCreatedResponseRequest(api.getLinkByRel("developers").getHref(), data)
-                  .execute(client, UserCreatedResponse.class);
-
-          callback.onSuccess(AccountServerApiServiceImpl.this, ucr);
-        }
-        catch (Exception e) {
-          callback.onFailure(AccountServerApiServiceImpl.this, e);
-        }
-      }
-    });
-  }
-
-  @Override
-  public void login(@NonNull final String username,
-                    @NonNull final String password,
-                    @NonNull final ApiCallback<AccountServerApiService, AccessKeys> callback) {
-    executorService.execute(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          Api api = new GetRequest<Api>(accountServerUrl.toString()).execute(client, Api.class);
-
-          OauthToken oauthToken = new OauthRequest(api.getLinkByRel("authenticate").getHref(),
-              username, password).execute(client, OauthToken.class);
-
-          //this token will be used by oauth interceptor
-          tokenWrapper.setAuthToken(oauthToken);
-
-          api = new GetRequest<Api>(accountServerUrl.toString()).execute(client, Api.class);
-
-          Developer developer = new GetRequest<Developer>(api.getLinkByRel("developer").getHref())
-              .execute(client, Developer.class);
-
-          AccessKeys accessKeys = new GetRequest<AccessKeys>(developer.getLinkByRel("accesskeys").getHref())
-              .execute(client, AccessKeys.class);
-
-          callback.onSuccess(AccountServerApiServiceImpl.this, accessKeys);
+          callback.onSuccess(AccountServerApiServiceImpl.this, keys);
         }
         catch (Exception e) {
           callback.onFailure(AccountServerApiServiceImpl.this, e);

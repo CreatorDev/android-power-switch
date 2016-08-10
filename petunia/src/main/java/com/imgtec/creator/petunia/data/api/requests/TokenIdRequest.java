@@ -29,19 +29,34 @@
  *
  */
 
-package com.imgtec.creator.petunia.data.api.accountserver;
+package com.imgtec.creator.petunia.data.api.requests;
 
-import android.content.Context;
-
-import com.imgtec.creator.petunia.data.api.ApiCallback;
 import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
+import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
+
+import okhttp3.FormBody;
+import okhttp3.Request;
 
 /**
  *
  */
-public interface AccountServerApiService {
+public class TokenIdRequest extends BaseRequest<AccessKey> {
 
-  void loginOrSignup(Context context);
+  private final String token;
 
-  void loginWithIdToken(String token, ApiCallback<AccountServerApiService, AccessKey> deviceServerLoginCallback);
+  public TokenIdRequest(String url, String token) {
+    super(url);
+    this.token = token;
+  }
+
+  @Override
+  public Request prepareRequest() {
+    return new Request.Builder()
+        .url(getUrl())
+        .addHeader("Accept", "application/vnd.imgtec.com.oauthtoken+json")
+        .post(new FormBody.Builder()
+            .addEncoded("id_token", token)
+            .build())
+        .build();
+  }
 }

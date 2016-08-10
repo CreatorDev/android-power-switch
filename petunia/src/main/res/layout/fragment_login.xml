@@ -72,60 +72,41 @@
 
     </FrameLayout>
 
-    <RelativeLayout
+    <View
+        android:id="@+id/positioner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/login_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_below="@+id/header"
-        android:layout_above="@+id/link_tv">
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edit_text_margin"
-            android:layout_above="@+id/password_container">
-
-            <EditText
-                android:id="@+id/username_email_et"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ic_perm_identity_white_24dp"
-                android:drawableTint="@color/secondary_color_light_grey"
-                android:ems="10"
-                android:hint="@string/username_or_email"
-                android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/password_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edit_text_margin"
-            android:layout_above="@+id/login_btn">
-
-            <EditText
-                android:id="@+id/password_et"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/username_email_et"
-                android:drawableRight="@drawable/ic_lock_outline_white_24dp"
-                android:drawableTint="@color/secondary_color_light_grey"
-                android:ems="10"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
-
-        </android.support.design.widget.TextInputLayout>
+        android:layout_below="@id/positioner">
 
         <com.imgtec.creator.petunia.presentation.views.ProgressButton
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_alignParentBottom="true"
+
             />
-    </RelativeLayout>
+        <CheckBox
+            android:id="@+id/keepLoggedIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_btn"
+            android:layout_centerVertical="true"
+            android:textColor="@color/secondary_color_grey"
+            android:text="@string/keep_me_signed_in"
+            />
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/link_tv"

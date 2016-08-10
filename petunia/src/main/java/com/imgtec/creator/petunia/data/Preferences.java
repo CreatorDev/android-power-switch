@@ -40,18 +40,18 @@ import javax.inject.Inject;
  */
 public class Preferences {
 
-  //credentials
+  //user
   private static final String EMPTY = "";
   private static final String USERNAME = "username";
   private static final String DEFAULT_USERNAME = EMPTY;
-  private static final String PASSWORD = "password";
-  private static final String DEFAULT_PASSWORD = EMPTY;
   private static final String EMAIL = "email";
   private static final String DEFAULT_EMAIL = EMPTY;
 
   //OAuth
   private static final String OAUTH_REFRESH_TOKEN = "oauth_refresh_token";
-  private static final String OAUTH_DEFAULT_REFRESH_TOKEN = EMPTY;
+  private static final String DEFAULT_OAUTH_REFRESH_TOKEN = EMPTY;
+  private static final String KEEP_ME_LOGGED_IN = "keep_me_logged_in";
+  private static final boolean DEFAULT_KEEP_ME_LOGGED_IN = false;
 
   private final SharedPreferences sharedPreferences;
 
@@ -60,25 +60,23 @@ public class Preferences {
     this.sharedPreferences = prefs;
   }
 
-  public Credentials getCredentials() {
+  public UserData getUserData() {
     final String username = sharedPreferences.getString(USERNAME, DEFAULT_USERNAME);
-    final String password = sharedPreferences.getString(PASSWORD, DEFAULT_PASSWORD);
     final String email = sharedPreferences.getString(EMAIL, DEFAULT_EMAIL);
-    return new Credentials(username, password, email);
+    return new UserData(username, email);
   }
 
-  public void setCredentials(final Credentials credentials) {
-    setCredentials(credentials.getUsername(), credentials.getPassword(), credentials.getEmail());
+  public void setUserData(final UserData userdata) {
+    setUserData(userdata.getUsername(), userdata.getEmail());
   }
 
-  public void resetCredentials() {
-    setCredentials("", "", "");
+  public void resetUserData() {
+    setUserData("", "");
   }
 
-  private void setCredentials(String username, String password, String email) {
+  private void setUserData(String username, String email) {
     final SharedPreferences.Editor editor = sharedPreferences.edit();
     editor.putString(USERNAME, username);
-    editor.putString(PASSWORD, password);
     editor.putString(EMAIL, email);
     editor.commit();
   }
@@ -90,10 +88,20 @@ public class Preferences {
   }
 
   public String getRefreshToken() {
-    return sharedPreferences.getString(OAUTH_REFRESH_TOKEN, OAUTH_DEFAULT_REFRESH_TOKEN);
+    return sharedPreferences.getString(OAUTH_REFRESH_TOKEN, DEFAULT_OAUTH_REFRESH_TOKEN);
   }
 
   public void resetRefreshToken() {
     setRefreshToken("");
+  }
+
+  public boolean getKeepMeLoggedIn() {
+    return sharedPreferences.getBoolean(KEEP_ME_LOGGED_IN, DEFAULT_KEEP_ME_LOGGED_IN);
+  }
+
+  public void setKeepMeLoggedIn(boolean checked) {
+    final SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.putBoolean(KEEP_ME_LOGGED_IN, checked);
+    editor.commit();
   }
 }

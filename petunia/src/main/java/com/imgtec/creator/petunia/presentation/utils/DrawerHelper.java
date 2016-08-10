@@ -49,6 +49,7 @@ public class DrawerHelper {
   private final MainActivity activity;
   private DrawerLayout drawer;
   private ActionBarDrawerToggle drawerToggle;
+  private NavigationView navigationView;
 
   @Inject
   public DrawerHelper(MainActivity activity) {
@@ -66,6 +67,10 @@ public class DrawerHelper {
     this.drawer = drawer;
   }
 
+  public void setNavigationView(NavigationView navigationView) {
+    this.navigationView = navigationView;
+  }
+
   public ActionBarDrawerToggle getDrawerToggle() {
     return this.drawerToggle;
   }
@@ -75,46 +80,69 @@ public class DrawerHelper {
   }
 
   public void unlockDrawer() {
-    activity.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-      }
-    });
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+      });
+    }
   }
 
   public void lockDrawer() {
-    activity.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-      }
-    });
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+      });
+    }
   }
 
   public void updateHeader(final String user, final String email) {
-    activity.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        if (user != null) {
-          ((TextView) activity.findViewById(R.id.user)).setText(user);
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          if (navigationView != null) {
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user);
+          }
+
+          if (navigationView != null) {
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email)).setText(email);
+          }
         }
-        if (email != null) {
-          ((TextView) activity.findViewById(R.id.email)).setText(email);
-        }
-      }
-    });
+      });
+    }
   }
 
   public void hideSelector() {
-    activity.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        Menu menu = ((NavigationView)drawer.findViewById(R.id.nav_view)).getMenu();
-        if (menu != null) {
-          for (int i = 0; i < menu.size(); menu.getItem(i).setChecked(false), i++);
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          Menu menu = ((NavigationView) drawer.findViewById(R.id.nav_view)).getMenu();
+          if (menu != null) {
+            for (int i = 0; i < menu.size(); menu.getItem(i).setChecked(false), i++) ;
+          }
         }
-      }
-    });
+      });
+    }
+  }
+
+  public void setSelector(final int index) {
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          Menu menu = ((NavigationView) drawer.findViewById(R.id.nav_view)).getMenu();
+          if (menu != null) {
+            menu.getItem(index).setChecked(true);
+          }
+        }
+      });
+    }
   }
 }

@@ -55,8 +55,6 @@
     <string name="relay_toggle_title">Relay Toggle</string>
     <string name="login_with_creator_account">LOGIN WITH CREATOR ACCOUNT</string>
 
-    <string name="visit_us"><a href='http://beta.creator.io'>visit us on to learn more</a></string>
-
     <string name="cancel">Cancel</string>
     <string name="retry">Retry</string>
     <string name="no_device_found">Could not find any device with matching criteria.</string>
@@ -69,6 +67,10 @@
         3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.\n\n
 
         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES,  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</string>
+    <string name="keep_me_signed_in">Keep me signed in</string>
+    <string name="please_wait_with_dots">Please wait …</string>
+    <string name="logging_in">Logging in.</string>
+    <string name="link"><![CDATA[<a href=\\\"#\\\">Learn more</a>]]></string>
 
 
 </resources>

@@ -32,6 +32,7 @@
 package com.imgtec.creator.petunia.data.api.accountserver;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.imgtec.creator.petunia.app.App;
 import com.imgtec.creator.petunia.data.api.ApiModule;
@@ -39,6 +40,7 @@ import com.imgtec.creator.petunia.data.api.oauth.OauthInterceptor;
 import com.imgtec.creator.petunia.data.api.oauth.OauthTokenWrapper;
 import com.imgtec.di.PerApp;
 
+import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import javax.inject.Named;
@@ -85,18 +87,29 @@ public class AccountServerModule {
 
   @Provides @PerApp @Named("AccountServer")
   HttpUrl provideAccountServerUrl() {
-    return HttpUrl.parse("https://developeraccounts.flowcloud.systems");
+    return HttpUrl.parse("https://developer-id.flowcloud.systems");
+  }
+
+  @Provides
+  IdConfig provideIdConfig() {
+    final String url = "https://id.creatordev.io/oauth2/auth";
+    final String client_id = "1c6c7bee-b5d0-440c-9b5a-61f54a62c18d";
+    final String scope = "core+openid+offline";
+    final Uri redirectUri = Uri.parse("io.creatordev.kit.powerswitch:/callback");
+    final String state = "dummy_state";     //not used for now
+    final String response_type = "id_token";
+    return new IdConfig(url, client_id, scope, redirectUri, state, response_type);
   }
 
   @Provides @PerApp
   AccountServerApiService provideAccountServerApiService(Context appContext,
                                                          @Named("AccountServer") HttpUrl url,
                                                          @Named("AccountServer") OkHttpClient client,
-                                                         @Named("AccountServer") OauthTokenWrapper tokenWrapper) {
+                                                         IdConfig idConfig) {
     return new AccountServerApiServiceImpl(appContext,
                                            url,
                                            client,
-                                           tokenWrapper,
-                                           Executors.newSingleThreadExecutor());
+                                           Executors.newSingleThreadExecutor(),
+                                           idConfig);
   }
 }
