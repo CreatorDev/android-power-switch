@@ -35,8 +35,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.gson.reflect.TypeToken;
+import com.imgtec.creator.petunia.data.Preferences;
 import com.imgtec.creator.petunia.data.api.ApiCallback;
 import com.imgtec.creator.petunia.data.api.oauth.OauthManager;
+import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
 import com.imgtec.creator.petunia.data.api.pojo.Api;
 import com.imgtec.creator.petunia.data.api.pojo.Client;
 import com.imgtec.creator.petunia.data.api.pojo.Clients;
@@ -49,6 +51,8 @@ import com.imgtec.creator.petunia.data.api.requests.ClientsRequest;
 import com.imgtec.creator.petunia.data.api.requests.GetRequest;
 import com.imgtec.creator.petunia.data.api.requests.InstancesRequest;
 import com.imgtec.creator.petunia.data.api.requests.PutInstancesRequest;
+import com.imgtec.creator.petunia.data.api.requests.RefreshTokenRequest;
+import com.imgtec.creator.petunia.data.api.requests.TokenIdRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,28 +72,36 @@ public class DeviceServerApiServiceImpl implements DeviceServerApiService {
   final OkHttpClient client;
   final OauthManager oauthManager;
   final ExecutorService executorService;
+  private final Preferences preferences;
 
   public DeviceServerApiServiceImpl(Context appContext,
                                     HttpUrl url,
                                     OkHttpClient client,
                                     OauthManager oauthManager,
-                                    ExecutorService executorService) {
+                                    ExecutorService executorService,
+                                    Preferences preferences) {
     super();
     this.appContext = appContext;
     this.url = url;
     this.client = client;
     this.oauthManager = oauthManager;
     this.executorService = executorService;
+    this.preferences = preferences;
   }
 
   @Override
-  public void login(@NonNull final String key, @NonNull final String secret,
+  public void login(@NonNull final String key, @NonNull final String secret, final boolean rememberMe,
                     @NonNull final ApiCallback<DeviceServerApiService, OauthToken> callback) {
     executorService.execute(new Runnable() {
       @Override
       public void run() {
         try {
           oauthManager.authorize(client, key, secret);
+
+          //store settings and notify
+          preferences.setKeepMeLoggedIn(rememberMe);
+          preferences.setRefreshToken(oauthManager.getOauthToken().getRefreshToken());
+
           callback.onSuccess(DeviceServerApiServiceImpl.this, oauthManager.getOauthToken());
         }
         catch (Exception e) {

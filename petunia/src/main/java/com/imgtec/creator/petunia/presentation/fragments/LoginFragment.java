@@ -32,6 +32,7 @@
 package com.imgtec.creator.petunia.presentation.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -47,22 +48,21 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.imgtec.creator.petunia.R;
-import com.imgtec.creator.petunia.data.Credentials;
+import com.imgtec.creator.petunia.data.UserData;
 import com.imgtec.creator.petunia.data.Preferences;
 import com.imgtec.creator.petunia.data.api.ApiCallback;
 import com.imgtec.creator.petunia.data.api.accountserver.AccountServerApiService;
+import com.imgtec.creator.petunia.data.api.accountserver.IdConfig;
 import com.imgtec.creator.petunia.data.api.deviceserver.DeviceServerApiService;
 import com.imgtec.creator.petunia.data.api.oauth.OauthTokenWrapper;
 import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
-import com.imgtec.creator.petunia.data.api.pojo.AccessKeys;
 import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
 import com.imgtec.creator.petunia.presentation.ActivityComponent;
-import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
 import com.imgtec.creator.petunia.presentation.views.ProgressButton;
 import com.imgtec.di.HasComponent;
 
@@ -80,15 +80,15 @@ import butterknife.OnClick;
 public class LoginFragment extends BaseFragment {
 
   private static final String STATE = "STATE";
-  private Credentials credentials;
+
 
   enum LoginState {
     NONE, IN_PROGRESS, COMPLETED
   }
 
-  @BindView(R.id.username_email_et) EditText usernameEmailET;
-  @BindView(R.id.password_et) EditText passwordET;
   @BindView(R.id.login_btn) ProgressButton loginBtn;
+  @BindView(R.id.keepLoggedIn) CheckBox keepLoggedIn;
+
   @BindView(R.id.link_tv) TextView linkTv;
 
   @Inject @Named("Main") Handler handler;
@@ -98,7 +98,9 @@ public class LoginFragment extends BaseFragment {
   @Inject DeviceServerApiService deviceService;
 
   final Logger logger = LoggerFactory.getLogger(getClass());
+  ProgressDialog progressDialog;
   LoginState state = LoginState.NONE;
+  boolean rememberMe = false;
 
   public static LoginFragment newInstance() {
     LoginFragment fragment = new LoginFragment();
@@ -120,7 +122,6 @@ public class LoginFragment extends BaseFragment {
 
     handleState(savedInstanceState);
     setupToolbar();
-    setupCredentials();
 
     drawerHelper.lockDrawer();
     loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +130,11 @@ public class LoginFragment extends BaseFragment {
         performLogin();
       }
     });
-    linkTv.setText(Html.fromHtml("<a href=\"#\">Visit us to learn more</a>"));
+
+    rememberMe = prefs.getKeepMeLoggedIn();
+    keepLoggedIn.setChecked(rememberMe);
+
+    linkTv.setText(Html.fromHtml(getString(R.string.link)));
   }
 
   @Override
@@ -143,41 +148,39 @@ public class LoginFragment extends BaseFragment {
     ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (rememberMe && state == LoginState.NONE) {
+      final String token = prefs.getRefreshToken();
+      if (!token.isEmpty()) {
+        deviceService.login(token, new DeviceServerLoginCallback(this));
+        showProgress(getActivity().getString(R.string.logging_in));
+      }
+    }
+  }
+
   @UiThread
   private void performLogin() {
-    final String username = usernameEmailET.getText().toString();
-    final String password = passwordET.getText().toString();
+    accountService.loginOrSignup(getContext());
+  }
 
-    verifyWithCredentials(username, password);
-
-    loginBtn.setProgress(true);
-    final Credentials c = prefs.getCredentials();
-    drawerHelper.updateHeader(c.getUsername(), c.getEmail());
-
-    final String refreshToken = prefs.getRefreshToken();
-    if (refreshToken.isEmpty()) {
-      state = LoginState.IN_PROGRESS;
-      accountService.login(username, password, new AccountServerLoginCallback(this, prefs, username, password));
-    }
-    else {
-      deviceService.login(refreshToken, new DeviceServerLoginCallback(this, prefs));
-    }
+  @OnClick(R.id.keepLoggedIn)
+  void onKeepMeLoggedIn(CheckBox checkBox) {
+    rememberMe = checkBox.isChecked();
   }
 
   @OnClick(R.id.link_tv)
   void openLink() {
-    Uri uri = Uri.parse("http://console.creatordev.io");
+    Uri uri = Uri.parse("http://creatordev.io");
     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
     startActivity(intent);
   }
 
-  private void verifyWithCredentials(String username, String password) {
-    if (credentials.getUsername().equals(username) && credentials.getPassword().equals(password))
-      return;
-
-    //if username & password differ, clear all
-    prefs.resetCredentials();
-    prefs.resetRefreshToken();
+  public void handleRedirection(String token) {
+    accountService.loginWithIdToken(token, new AccountServerLoginCallback(this, prefs));
+    updateLoginState(LoginState.IN_PROGRESS);
+    refreshLoginButton();
   }
 
   private void handleState(Bundle savedInstanceState) {
@@ -196,17 +199,8 @@ public class LoginFragment extends BaseFragment {
     actionBar.hide();
   }
 
-  private void setupCredentials() {
-    credentials = prefs.getCredentials();
-    usernameEmailET.setText(credentials.getUsername());
-    passwordET.setText(credentials.getPassword());
-  }
-
   private void notifyAccountLoginSuccessful(String key, String secret) {
-    final Credentials c = prefs.getCredentials();
-    drawerHelper.updateHeader(c.getUsername(), c.getEmail());
-
-    deviceService.login(key, secret, new DeviceServerLoginCallback(this, prefs));
+    deviceService.login(key, secret, rememberMe, new DeviceServerLoginCallback(this));
   }
 
   private void showToast(final String msg, final int duration) {
@@ -217,6 +211,26 @@ public class LoginFragment extends BaseFragment {
           Toast.makeText(getActivity(), msg, duration).show();
         }
       });
+    }
+  }
+
+  void showProgress(final String message) {
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        if (getActivity() != null) {
+          progressDialog = ProgressDialog.show(getActivity(),
+              getActivity().getString(R.string.please_wait_with_dots), message, true);
+          progressDialog.setCanceledOnTouchOutside(false);
+        }
+      }
+    });
+  }
+
+  void hideProgress() {
+    if (progressDialog != null) {
+      progressDialog.dismiss();
+      progressDialog = null;
     }
   }
 
@@ -231,34 +245,29 @@ public class LoginFragment extends BaseFragment {
   private void requestFailed(String msg, Throwable t) {
     updateLoginState(LoginState.NONE);
     refreshLoginButton();
+    hideProgress();
     showToast(msg + t.getMessage(), Toast.LENGTH_LONG);
   }
 
-  static class AccountServerLoginCallback implements ApiCallback<AccountServerApiService,AccessKeys> {
+  static class AccountServerLoginCallback implements ApiCallback<AccountServerApiService,AccessKey> {
 
     private final WeakReference<LoginFragment> fragment;
     private final Preferences preferences;
-    private final String username;
-    private final String password;
 
-    public AccountServerLoginCallback(LoginFragment fragment, Preferences prefs,
-                                      String username, String password) {
+    public AccountServerLoginCallback(LoginFragment fragment, Preferences prefs) {
       super();
       this.fragment = new WeakReference<>(fragment);
       this.preferences = prefs;
-      this.username = username;
-      this.password = password;
     }
 
     @Override
-    public void onSuccess(final AccountServerApiService service, final AccessKeys result) {
+    public void onSuccess(final AccountServerApiService service, final AccessKey result) {
 
-      AccessKey ak = result.getItems().get(0);
-      preferences.setCredentials(new Credentials(username, password));
+      preferences.setUserData(new UserData(result.getName(), "" ));
 
       LoginFragment f = fragment.get();
       if (f != null) {
-        f.notifyAccountLoginSuccessful(ak.getKey(), ak.getSecret());
+        f.notifyAccountLoginSuccessful(result.getKey(), result.getSecret());
       }
     }
 
@@ -281,23 +290,24 @@ public class LoginFragment extends BaseFragment {
 
     final Logger logger = LoggerFactory.getLogger(DeviceServerLoginCallback.class);
     final WeakReference<LoginFragment> fragment;
-    final Preferences preferences;
 
-    public DeviceServerLoginCallback(LoginFragment fragment, Preferences prefs) {
+
+    public DeviceServerLoginCallback(LoginFragment fragment) {
       super();
       this.fragment = new WeakReference<>(fragment);
-      this.preferences = prefs;
     }
 
     @Override
     public void onSuccess(DeviceServerApiService service, OauthToken result) {
 
-      preferences.setRefreshToken(result.getRefreshToken());
-
       final LoginFragment f = fragment.get();
       if (f != null && f.getActivity() != null) {
-        FragmentHelper.replaceFragmentAndClearBackStack(f.getActivity().getSupportFragmentManager(),
-            ChooseDeviceFragment.newInstance());
+        f.handler.post(new Runnable() {
+          @Override
+          public void run() {
+            f.finishRequest();
+          }
+        });
       }
       else {
         logger.warn("DS login successfull, but activity is null! Skipping.");
@@ -316,5 +326,13 @@ public class LoginFragment extends BaseFragment {
         });
       }
     }
+  }
+
+  private void finishRequest() {
+    updateLoginState(LoginState.COMPLETED);
+    refreshLoginButton();
+    hideProgress();
+    FragmentHelper.replaceFragmentAndClearBackStack(getActivity().getSupportFragmentManager(),
+        ChooseDeviceFragment.newInstance());
   }
 }

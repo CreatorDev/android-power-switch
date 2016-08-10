@@ -29,19 +29,26 @@
  *
  */
 
-package com.imgtec.creator.petunia.data.api.accountserver;
-
-import android.content.Context;
-
-import com.imgtec.creator.petunia.data.api.ApiCallback;
-import com.imgtec.creator.petunia.data.api.pojo.AccessKey;
+package com.imgtec.creator.petunia.data;
 
 /**
  *
  */
-public interface AccountServerApiService {
+public class UserData {
 
-  void loginOrSignup(Context context);
+  private final String username;
+  private final String email;
 
-  void loginWithIdToken(String token, ApiCallback<AccountServerApiService, AccessKey> deviceServerLoginCallback);
+  public UserData(String username, String email) {
+    this.username = username;
+    this.email = email;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getEmail() {
+    return email;
+  }
 }

@@ -39,6 +39,7 @@ import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
 import com.imgtec.creator.petunia.data.api.pojo.ObjectType;
 import com.imgtec.creator.petunia.data.api.pojo.ObjectTypes;
 import com.imgtec.creator.petunia.data.api.pojo.RelayState;
+import com.imgtec.creator.petunia.presentation.fragments.LoginFragment;
 
 import java.io.IOException;
 
@@ -47,7 +48,7 @@ import java.io.IOException;
  */
 public interface DeviceServerApiService {
 
-  void login(final String key, final String secret,
+  void login(final String key, final String secret, boolean rememberMe,
              ApiCallback<DeviceServerApiService, OauthToken> callback);
 
   void login(final String refreshToken, ApiCallback<DeviceServerApiService, OauthToken> callback);

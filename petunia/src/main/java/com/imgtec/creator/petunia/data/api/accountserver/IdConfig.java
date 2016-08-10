@@ -29,36 +29,70 @@
  *
  */
 
-package com.imgtec.creator.petunia.data;
+package com.imgtec.creator.petunia.data.api.accountserver;
+
+import android.net.Uri;
+
+import java.util.UUID;
 
 /**
  *
  */
-public class Credentials {
+public class IdConfig {
 
-  private final String username;
-  private final String password;
-  private final String email;
 
-  public Credentials(String username, String password, String email) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
+  private final String url;
+  private final String clientId;
+  private final String scope;
+  private final Uri redirectUri;
+  private final String state;
+  private final String responseType;
+
+  public IdConfig(String url, String client_id, String scope, Uri redirectUri, String state,
+                  String response_type) {
+    super();
+    this.url = url;
+    this.clientId = client_id;
+    this.scope = scope;
+    this.redirectUri = redirectUri;
+    this.state = state;
+    this.responseType = response_type;
   }
 
-  public Credentials(String username, String password) {
-    this(username, password, "");
+  public Uri getOauthUri() {
+
+    final String nonce = UUID.randomUUID().toString();
+
+    return Uri.parse(getUrl() + "?" +
+        "client_id=" + getClientId() + "&" +
+        "scope=" + getScope() + "&" +
+        "redirect_uri=" + getRedirectUri() + "&" +
+        "state=" + getState() + "&" +
+        "nonce=" + nonce + "&" +
+        "response_type=" + getResponseType());
   }
 
-  public String getUsername() {
-    return username;
+  public String getUrl() {
+    return url;
   }
 
-  public String getPassword() {
-    return password;
+  public String getClientId() {
+    return clientId;
   }
 
-  public String getEmail() {
-    return email;
+  public String getScope() {
+    return scope;
+  }
+
+  public Uri getRedirectUri() {
+    return redirectUri;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public String getResponseType() {
+    return responseType;
   }
 }

@@ -52,8 +52,11 @@ import android.widget.Toast;
 import com.imgtec.creator.petunia.R;
 import com.imgtec.creator.petunia.data.DataService;
 import com.imgtec.creator.petunia.data.Gateway;
+import com.imgtec.creator.petunia.data.Preferences;
+import com.imgtec.creator.petunia.data.UserData;
 import com.imgtec.creator.petunia.presentation.ActivityComponent;
 import com.imgtec.creator.petunia.presentation.adapters.GatewaysAdapter;
+import com.imgtec.creator.petunia.presentation.utils.DrawerHelper;
 import com.imgtec.creator.petunia.presentation.utils.ToolbarHelper;
 import com.imgtec.creator.petunia.presentation.views.HorizontalItemDecoration;
 import com.imgtec.creator.petunia.presentation.views.RecyclerItemClickSupport;
@@ -70,12 +73,15 @@ public class ChooseDeviceFragment extends BaseFragment {
 
   @Inject DataService dataService;
   @Inject ToolbarHelper toolbarHelper;
+  @Inject Preferences prefs;
+  @Inject DrawerHelper drawerHelper;
 
   @BindView(R.id.gateways)
   RecyclerView recyclerView;
 
   private LinearLayoutManager layoutManager;
   private GatewaysAdapter adapter;
+  private AlertDialog retryDialog;
 
   public static ChooseDeviceFragment newInstance() {
     ChooseDeviceFragment fragment = new ChooseDeviceFragment();
@@ -97,7 +103,7 @@ public class ChooseDeviceFragment extends BaseFragment {
     super.onActivityCreated(savedInstanceState);
 
     setupToolbar();
-
+    setupDrawer();
     final DefaultItemAnimator itemAnimator = new DefaultItemAnimator();
     itemAnimator.setAddDuration(200);
     layoutManager = new LinearLayoutManager(getActivity());
@@ -121,6 +127,12 @@ public class ChooseDeviceFragment extends BaseFragment {
         });
 
     loadGateways();
+  }
+
+  private void setupDrawer() {
+    final UserData data = prefs.getUserData();
+    drawerHelper.updateHeader(data.getUsername(), data.getEmail());
+    drawerHelper.setSelector(0);
   }
 
   private void loadGateways() {
@@ -153,6 +165,10 @@ public class ChooseDeviceFragment extends BaseFragment {
   @Override
   public void onPause() {
     toolbarHelper.hideProgress();
+    if (retryDialog != null) {
+      retryDialog.dismiss();
+      retryDialog = null;
+    }
     super.onPause();
   }
 
@@ -164,6 +180,7 @@ public class ChooseDeviceFragment extends BaseFragment {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
+            retryDialog = null;
           }
         })
     .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
@@ -171,10 +188,12 @@ public class ChooseDeviceFragment extends BaseFragment {
       public void onClick(DialogInterface dialog, int which) {
         loadGateways();
         dialog.dismiss();
+        retryDialog = null;
       }
     });
 
-    builder.create().show();
+    retryDialog = builder.create();
+    retryDialog.show();
   }
 
   private static class GatewayRequestor implements DataService.DataCallback<List<Gateway>> {

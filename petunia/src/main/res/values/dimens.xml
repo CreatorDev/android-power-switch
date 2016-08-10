@@ -43,4 +43,6 @@
     <dimen name="user_icon_width">64dp</dimen>
     <dimen name="user_icon_height">64dp</dimen>
 
+    <dimen name="login_vertical_margin">48dp</dimen>
+
 </resources>

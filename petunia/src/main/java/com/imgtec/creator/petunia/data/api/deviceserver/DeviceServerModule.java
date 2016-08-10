@@ -103,12 +103,14 @@ public class DeviceServerModule {
   DeviceServerApiService provideDeviceServerApiService(Context appContext,
                                                        @Named("DeviceServer") HttpUrl url,
                                                        @Named("DeviceServer") OkHttpClient client,
-                                                       @Named("DeviceServer") OauthManager oauthManager) {
+                                                       @Named("DeviceServer") OauthManager oauthManager,
+                                                       Preferences preferences) {
     return new DeviceServerApiServiceImpl(appContext,
                                           url,
                                           client,
                                           oauthManager,
-                                          Executors.newSingleThreadExecutor());
+                                          Executors.newSingleThreadExecutor(),
+                                          preferences);
   }
 
 }

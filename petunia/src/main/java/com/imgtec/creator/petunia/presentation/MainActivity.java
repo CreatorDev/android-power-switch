@@ -32,7 +32,9 @@
 package com.imgtec.creator.petunia.presentation;
 
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -46,6 +48,9 @@ import android.view.MenuItem;
 
 import com.imgtec.creator.petunia.R;
 import com.imgtec.creator.petunia.data.Preferences;
+import com.imgtec.creator.petunia.data.api.ApiCallback;
+import com.imgtec.creator.petunia.data.api.deviceserver.DeviceServerApiService;
+import com.imgtec.creator.petunia.data.api.pojo.OauthToken;
 import com.imgtec.creator.petunia.presentation.fragments.AboutFragment;
 import com.imgtec.creator.petunia.presentation.fragments.ChooseDeviceFragment;
 import com.imgtec.creator.petunia.presentation.fragments.FragmentHelper;
@@ -56,6 +61,9 @@ import com.imgtec.creator.petunia.presentation.utils.ToolbarHelper;
 import com.imgtec.di.HasComponent;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
@@ -85,6 +93,7 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
   @Inject DrawerHelper drawerHelper;
   @Inject ToolbarHelper toolbarHelper;
   @Inject Preferences preferences;
+  @Inject DeviceServerApiService deviceService;
 
   ActionBarDrawerToggle toggle;
   Unbinder unbinder;
@@ -105,6 +114,24 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
     }
   }
 
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Uri uri = intent.getData();
+    if (uri != null){
+      handleResponseIntent(uri);
+    }
+  }
+
+  private void handleResponseIntent(Uri uri) {
+    String token = uri.toString().split("#")[1].split("=")[1];
+    if (token != null) {
+      if (currentFragment instanceof LoginFragment) {
+        ((LoginFragment) currentFragment).handleRedirection(token);
+      }
+    }
+  }
+
   private void setupNavigationDrawer() {
     toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
         R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -115,6 +142,7 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
     navigationView.setNavigationItemSelectedListener(this);
     navigationView.getMenu().getItem(0).setChecked(true);
     drawerHelper.setDrawer(drawer);
+    drawerHelper.setNavigationView(navigationView);
     drawerHelper.setDrawerToggle(toggle);
   }
 
@@ -177,7 +205,7 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
       }
       case R.id.logout: {
         preferences.resetRefreshToken();
-        preferences.resetCredentials();
+        preferences.resetUserData();
         showFragmentWithClearBackstack(LoginFragment.newInstance());
       }
       default:
@@ -197,5 +225,46 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     toggle.onConfigurationChanged(newConfig);
+  }
+
+  static class DeviceServerLoginCallback implements ApiCallback<DeviceServerApiService,OauthToken> {
+
+    final Logger logger = LoggerFactory.getLogger(DeviceServerLoginCallback.class);
+    final WeakReference<MainActivity> activity;
+    final Preferences preferences;
+
+    public DeviceServerLoginCallback(MainActivity activity, Preferences prefs) {
+      super();
+      this.activity = new WeakReference<>(activity);
+      this.preferences = prefs;
+    }
+
+    @Override
+    public void onSuccess(DeviceServerApiService service, OauthToken result) {
+
+      preferences.setRefreshToken(result.getRefreshToken());
+
+      final MainActivity a = activity.get();
+      if (a != null ) {
+        FragmentHelper.replaceFragmentAndClearBackStack(a.getSupportFragmentManager(),
+            ChooseDeviceFragment.newInstance());
+      }
+      else {
+        logger.warn("DS login successfull, but activity is null! Skipping.");
+      }
+    }
+
+    @Override
+    public void onFailure(DeviceServerApiService service, final Throwable t) {
+      final MainActivity a = activity.get();
+      if (a != null) {
+        a.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            //TODO: implement
+          }
+        });
+      }
+    }
   }
 }

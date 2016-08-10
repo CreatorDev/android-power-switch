@@ -39,6 +39,7 @@ import com.imgtec.creator.petunia.data.DataService;
 import com.imgtec.creator.petunia.data.api.ApiModule;
 import com.imgtec.creator.petunia.data.api.accountserver.AccountServerApiService;
 import com.imgtec.creator.petunia.data.api.accountserver.AccountServerModule;
+import com.imgtec.creator.petunia.data.api.accountserver.IdConfig;
 import com.imgtec.creator.petunia.data.api.deviceserver.DeviceServerApiService;
 import com.imgtec.creator.petunia.data.api.deviceserver.DeviceServerModule;
 import com.imgtec.creator.petunia.data.api.oauth.OauthTokenWrapper;
@@ -89,5 +90,6 @@ public interface ApplicationComponent {
 
   AccountServerApiService getAccountServerApi();
   DeviceServerApiService getDeviceServerApi();
+  IdConfig getIdConfig();
 }
 
