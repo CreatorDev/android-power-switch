@@ -79,7 +79,7 @@ ext {
     slf4jVersion = '1.7.4'
     logbackVersion = '1.1.1-4'
 
-    crashlyticsVersion = '2.6.0@aar'
+    crashlyticsVersion = '2.6.1@aar'
 
     daggerVersion = '2.0.2'
     jsr250Version = '1.0'
