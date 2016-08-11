@@ -79,8 +79,6 @@ ext {
     slf4jVersion = '1.7.4'
     logbackVersion = '1.1.1-4'
 
-    crashlyticsVersion = '2.6.1@aar'
-
     daggerVersion = '2.0.2'
     jsr250Version = '1.0'
 
@@ -112,13 +110,9 @@ ext {
             daggerCompiler: "com.google.dagger:dagger-compiler:${daggerVersion}",
             jsr250:         "javax.annotation:jsr250-api:${jsr250Version}",
 
-            crashlytics:    "com.crashlytics.sdk.android:crashlytics:${crashlyticsVersion}",
-
             leakcanary:     "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}",
             leakcanaryNoOp: "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryNoOpVersion}",
 
-            //retrofit:       "com.squareup.retrofit2:retrofit:${retrofitVersion}",
-            //gsonConverter:  "com.squareup.retrofit2:converter-gson:${gsonConverterVersion}",
             gson:           "com.google.code.gson:gson:${gsonVersion}",
             okhttp:         "com.squareup.okhttp3:okhttp:${okhttpVersion}",
             okhttpLoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:${okhttpLoggingInterceptorVersion}"
