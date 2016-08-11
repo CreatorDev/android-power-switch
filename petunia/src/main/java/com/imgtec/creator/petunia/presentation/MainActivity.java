@@ -116,19 +116,23 @@ public class MainActivity extends BaseActivity implements HasComponent<ActivityC
 
   @Override
   protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    Uri uri = intent.getData();
-    if (uri != null){
-      handleResponseIntent(uri);
+    if (intent != null) {
+      handleResponseIntent(intent);
     }
   }
 
-  private void handleResponseIntent(Uri uri) {
-    String token = uri.toString().split("#")[1].split("=")[1];
-    if (token != null) {
-      if (currentFragment instanceof LoginFragment) {
-        ((LoginFragment) currentFragment).handleRedirection(token);
+  private void handleResponseIntent(Intent intent) {
+    Uri uri = intent.getData();
+    if (uri != null) {
+      String token = uri.toString().split("#")[1].split("=")[1];
+      if (token != null) {
+        if (currentFragment instanceof LoginFragment) {
+          ((LoginFragment) currentFragment).handleRedirection(token);
+        }
       }
+    }
+    else {
+      logger.error("URI missing in authorization intent!");
     }
   }
 
