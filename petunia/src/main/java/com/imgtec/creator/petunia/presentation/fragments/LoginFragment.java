@@ -228,10 +228,15 @@ public class LoginFragment extends BaseFragment {
   }
 
   void hideProgress() {
-    if (progressDialog != null) {
-      progressDialog.dismiss();
-      progressDialog = null;
-    }
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        if (progressDialog != null) {
+          progressDialog.dismiss();
+          progressDialog = null;
+        }
+      }
+    });
   }
 
   private void updateLoginState(LoginState loginState) {
