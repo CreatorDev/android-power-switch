@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ <b>Copyright (c) 2016, Imagination Technologies Limited and/or its affiliated group companies
+  ~  and/or licensors. </b>
+  ~
+  ~  All rights reserved.
+  ~
+  ~  Redistribution and use in source and binary forms, with or without modification, are permitted
+  ~  provided that the following conditions are met:
+  ~
+  ~  1. Redistributions of source code must retain the above copyright notice, this list of conditions
+  ~      and the following disclaimer.
+  ~
+  ~  2. Redistributions in binary form must reproduce the above copyright notice, this list of
+  ~      conditions and the following disclaimer in the documentation and/or other materials provided
+  ~      with the distribution.
+  ~
+  ~  3. Neither the name of the copyright holder nor the names of its contributors may be used to
+  ~      endorse or promote products derived from this software without specific prior written
+  ~      permission.
+  ~
+  ~  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+  ~  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+  ~  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+  ~  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  ~  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  ~  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  ~  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  ~  WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_color_purple"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:src="@drawable/rsz_creator_logo_rgb_wht" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/secondary_color_light_grey"
+        android:layout_below="@id/logo">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_color_dark_grey"
+            android:textSize="18sp"
+            android:text="@string/login_with_creator_account"
+            android:layout_gravity="center"
+            />
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/positioner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/login_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@id/positioner">
+
+        <com.imgtec.creator.petunia.presentation.views.ProgressButton
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+
+            />
+        <CheckBox
+            android:id="@+id/keepLoggedIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_btn"
+            android:layout_centerVertical="true"
+            android:textColor="@color/secondary_color_grey"
+            android:text="@string/keep_me_signed_in"
+            />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/link_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp"
+        android:layout_alignParentBottom="true"
+        android:autoLink="all"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>
