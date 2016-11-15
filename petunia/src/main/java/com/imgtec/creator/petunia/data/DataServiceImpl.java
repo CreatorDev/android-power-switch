@@ -45,6 +45,7 @@ import com.imgtec.creator.petunia.data.api.pojo.RelayState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -80,7 +81,18 @@ public class DataServiceImpl implements DataService {
           Clients result = deviceServerApi.getClients(new DeviceServerApiService.Filter<Client>() {
             @Override
             public boolean accept(Client client) {
-              return client.getName().startsWith("RelayDevice");
+              try {
+                ObjectTypes objectTypes = deviceServerApi.getObjectTypes(client, null);
+                for (ObjectType objectType : objectTypes.getItems()) {
+                  if (objectType.getObjectTypeID().equals("3201")) {
+                    return true;
+                  }
+                }
+              } catch (IOException e) {
+                logger.error("Failed to get object types, {}", e.getMessage());
+                return false;
+              }
+              return false;
             }
           });
 
