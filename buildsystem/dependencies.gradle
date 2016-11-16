@@ -48,20 +48,20 @@ ext {
     //Android:
 
     petuniaCompileSdkVersion = 23
-    petuniaBuildToolsVersion = '23.0.3'
+    petuniaBuildToolsVersion = '25.0.0'
 
     //change package
     petuniaApplicationId = 'com.imgtec.creator.project3'
     petuniaTestApplicationId = 'com.imgtec.creator.project3.test'
     petuniaMinSdkVersion = 15
     petuniaTargetSdkVersion = 23
-    petuniaVersionCode = 1
-    petuniaVersionName = "1.0.0"
+    petuniaVersionCode = 2
+    petuniaVersionName = "1.0.1"
 
 
     //----------------------------------------------------------------------
     diCompileSdkVersion = 23
-    diBuildToolsVersion = '23.0.3'
+    diBuildToolsVersion = '25.0.0'
 
     diMinSdkVersion = 15
     diTargetSdkVersion = 23
