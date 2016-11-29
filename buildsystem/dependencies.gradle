@@ -30,49 +30,41 @@
  */
 
 allprojects {
-    repositories {
-        mavenLocal()
-        maven {
-            url "http://nexus.flowservices.systems/content/groups/public"
-        }
-        maven {
-            url "https://jitpack.io"
-        }
-
-        mavenCentral()
-    }
+	repositories {
+		jcenter()
+	}
 }
 
 ext {
 
     //Android:
 
-    petuniaCompileSdkVersion = 23
-    petuniaBuildToolsVersion = '25.0.0'
+    petuniaCompileSdkVersion = 25
+    petuniaBuildToolsVersion = '25.0.1'
 
     //change package
     petuniaApplicationId = 'com.imgtec.creator.project3'
     petuniaTestApplicationId = 'com.imgtec.creator.project3.test'
     petuniaMinSdkVersion = 15
-    petuniaTargetSdkVersion = 23
+    petuniaTargetSdkVersion = 25
     petuniaVersionCode = 2
     petuniaVersionName = "1.0.1"
 
 
     //----------------------------------------------------------------------
-    diCompileSdkVersion = 23
-    diBuildToolsVersion = '25.0.0'
+    diCompileSdkVersion = 25
+    diBuildToolsVersion = '25.0.1'
 
     diMinSdkVersion = 15
-    diTargetSdkVersion = 23
+    diTargetSdkVersion = 25
     diVersionCode = 1
     diVersionName = "1.0.0"
     //----------------------------------------------------------------------
 
     //libraries
-    appCompatVersion = '23.3.0'
-    appDesignVersion = '23.3.0'
-    recyclerViewVersion = '23.3.0'
+    appCompatVersion = '25.0.1'
+    appDesignVersion = '25.0.1'
+    recyclerViewVersion = '25.0.1'
 
     butterKnifeVersion = '8.1.0'
 
